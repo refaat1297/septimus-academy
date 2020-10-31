@@ -1,27 +1,17 @@
 <template>
-    <div class="container">
-        <button @click="addUser()">Adds</button>
+    <div class="lg:container">
+        <!-- <h1>test</h1> -->
+        <SiteBanner />
     </div>
 </template>
 
 <script>
-import {db} from '~/firebase/index'
+import SiteBanner from "@/components/site/home/SiteBanner"
 
 export default {
-	methods: {
-		addUser () {
-
-			const userKey = db.ref().child('users').push().key 
-
-			let updates = {}
-			updates[`/users/${userKey}`] = {
-				name: "Reem Amr",
-				age: 30
-			}
-
-			return db.ref().update(updates)
-		}
-	}
+    components: {
+        SiteBanner
+    }
 };
 </script>
 
