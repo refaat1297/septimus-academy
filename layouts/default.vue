@@ -1,8 +1,19 @@
 <template>
     <div>
+        <SiteNavbar />
         <Nuxt />
     </div>
 </template>
+
+<script>
+import SiteNavbar from '@/components/site/shared/SiteNavbar'
+
+export default {
+    components: {
+        SiteNavbar
+    }
+}
+</script>
 
 <style>
 html {
