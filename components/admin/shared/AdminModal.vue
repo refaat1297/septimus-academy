@@ -47,7 +47,7 @@
         <div
             v-if="toggleModal"
             @click="toggleModal = false"
-            class="transition-all duration-1000 ease-in-out absolute z-40 inset-0 opacity-50 bg-black"
+            class="transition-all duration-1000 ease-in-out fixed h-screen z-40 inset-0 opacity-50 bg-black"
         ></div>
     </div>
 </template>
