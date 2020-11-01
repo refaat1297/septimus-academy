@@ -32,8 +32,8 @@
                 >
             </li>
             <li class="text-center block w-full">
-                <nuxt-link to="/" class="block w-full py-4 text-2xl"
-                    >Home</nuxt-link
+                <nuxt-link to="/admin" class="block w-full py-4 text-2xl"
+                    >Admin</nuxt-link
                 >
             </li>
             <li class="text-center block w-full">
@@ -71,7 +71,7 @@ export default {
     }
 
     .icon {
-        right: -44px;
+        right: -52px;
         padding: 10px;
         top: 68px;
         border-top-right-radius: 7px;
