@@ -1,6 +1,6 @@
 <template>
     <div
-        class="site-navbar h-full bg-indigo-700 w-64 absolute top-0 z-10 text-white"
+        class="site-navbar h-full bg-indigo-700 w-64 fixed top-0 z-10 text-white"
         :class="{ 'left-0': showNav }"
     >
         <div
