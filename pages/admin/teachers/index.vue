@@ -8,12 +8,9 @@
         <div
             class="grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-5"
         >
-            <p v-if="$fetchState.pending">Fetching mountains...</p>
-            <p v-else-if="$fetchState.error">An error occurred :(</p>
             <TeacherCard
-                v-else
                 v-for="teacher in teachers"
-                :key="teacher.email"
+                :key="teacher.id"
                 :teacher="teacher"
             />
         </div>
@@ -21,38 +18,25 @@
 </template>
 
 <script>
-import { db } from "@/firebase";
-
+import {db} from '@/firebase'
 import TeacherCard from "@/components/admin/teachers/TeacherCard";
 
 export default {
     components: {
         TeacherCard
     },
-    data() {
-        return {
-            teachers: null
-        };
-    },
-    fetch() {
-        return db
-            .ref("teachers")
-            .once("value")
-            .then(data => {
-                console.log(data);
-                this.teachers = data.val();
-            });
-    },
-    methods: {
-        getTeachers() {
-            return db
-                .ref("teachers")
-                .once("value")
-                .then(data => {
-                    console.log(data);
-                    this.teacherss = data.val();
-                });
-        }
+    async asyncData () {
+        return db.collection('teachers').get().then(res => {
+            let teachers = res.docs.map(doc => {
+                return Object.assign({}, doc.data(), {
+                    id: doc.id
+                })
+            })
+
+            return {
+                teachers
+            }
+        })
     }
 };
 </script>

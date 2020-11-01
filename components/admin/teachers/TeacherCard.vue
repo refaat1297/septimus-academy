@@ -8,7 +8,7 @@
             class="text-center md:text-left flex flex-col sm:items-center md:items-start sm:justify-center"
         >
             <h2 class="text-lg font-bold italic text-xl">{{ teacher.name }}</h2>
-            <div class="text-purple-500 font-semibold">Product Engineer</div>
+            <div class="text-purple-500 font-semibold">{{ teacher.specialty }}</div>
             <div class="text-gray-800">{{ teacher.email }}</div>
             <div class="text-gray-800">{{ teacher.phone }}</div>
         </div>
@@ -20,7 +20,7 @@ export default {
     name: "TeacherCard",
     props: {
         teacher: {
-            type: Boolean,
+            type: Object,
             required: true
         }
     }
