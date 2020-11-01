@@ -1,18 +1,21 @@
 <template>
     <div>
         <AdminNavbar />
+        <AdminBanner />
         <Nuxt />
     </div>
 </template>
 
 <script>
-import AdminNavbar from '@/components/admin/shared/AdminNavbar'
+import AdminNavbar from "@/components/admin/shared/AdminNavbar";
+import AdminBanner from "@/components/admin/shared/AdminBanner";
 
 export default {
     components: {
-        AdminNavbar
+        AdminNavbar,
+        AdminBanner
     }
-}
+};
 </script>
 
 <style>

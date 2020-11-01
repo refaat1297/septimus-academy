@@ -11,7 +11,8 @@ import SiteBanner from "@/components/site/home/SiteBanner"
 export default {
     components: {
         SiteBanner
-    }
+    },
+    transition: 'slide-left'
 };
 </script>
 
