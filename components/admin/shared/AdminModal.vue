@@ -5,7 +5,7 @@
             v-if="toggleModal"
             class="z-50 transition-all duration-1000 ease-in-out fixed flex justify-center items-center overflow-x-hidden overflow-y-auto inset-0"
         >
-            <div class="relative mx-auto w-auto max-w-2xl ml-3 mr-3">
+            <div class="relative mx-auto w-full max-w-2xl ml-3 mr-3">
                 <div
                     class="bg-white w-full rounded p-5 shadow-2xl flex flex-col"
                 >

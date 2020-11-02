@@ -11,6 +11,7 @@
             <div class="text-purple-500 font-semibold">{{ teacher.specialty }}</div>
             <div class="text-gray-800">{{ teacher.email }}</div>
             <div class="text-gray-800">{{ teacher.phone }}</div>
+            <button @click="$emit('edit')">Edit</button>
         </div>
     </div>
 </template>

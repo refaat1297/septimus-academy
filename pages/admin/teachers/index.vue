@@ -1,5 +1,5 @@
 <template>
-    <div class="lg:container mx-auto px-4 mt-8">
+    <div class="lg:container mx-auto px-4 mt-8 mb-8">
         <h2 class="mb-5 flex items-center justify-between">
             <span class="text-3xl font-extrabold italic">All Teachers</span>
             <button
@@ -10,9 +10,7 @@
             </button>
         </h2>
 
-        <AdminModal
-            :toggleModal="toggleModal"
-        >
+        <AdminModal :toggleModal="toggleModal">
             <template v-slot>
                 <form @submit.prevent="submit()">
                     <div>
@@ -63,7 +61,6 @@
                     </div>
                 </form>
             </template>
-            <!-- <template v-slot:submit-text>Add </template> -->
         </AdminModal>
 
         <div
@@ -73,6 +70,7 @@
                 v-for="teacher in teachers"
                 :key="teacher.id"
                 :teacher="teacher"
+                @edit="edit(teacher)"
             />
         </div>
     </div>
@@ -80,6 +78,11 @@
 
 <script>
 import { db } from "@/firebase";
+import {
+    addToCollection,
+    getCollection,
+    updateDocumnet
+} from "@/firebase/methods/firestore";
 import TeacherCard from "@/components/admin/teachers/TeacherCard";
 
 import AdminModal from "@/components/admin/shared/AdminModal";
@@ -92,6 +95,7 @@ export default {
     data() {
         return {
             toggleModal: false,
+            isEdit: false,
             teacher: {
                 name: null,
                 email: null,
@@ -103,45 +107,65 @@ export default {
     methods: {
         close() {
             this.toggleModal = false;
+            this.isEdit = false;
+            this.teacher = {
+                name: null,
+                email: null,
+                phone: null,
+                specialty: null
+            };
         },
-        submit() {
+        edit(selectedTeacher) {
+            this.isEdit = true;
+            this.toggleModal = true;
+            this.teacher = selectedTeacher;
+        },
+        update() {
+            let teacherInfo = { ...this.teacher };
+            delete teacherInfo.id;
+            return updateDocumnet(
+                "teachers",
+                this.teacher.id,
+                teacherInfo
+            ).then(res => {
+                this.close();
+            });
+        },
+        add() {
             const form = {
                 ...this.teacher,
-                image: 'teacher-1.jpg'
-            }
+                image: "teacher-1.jpg"
+            };
 
-            console.log(form)
+            console.log(form);
 
-            return db
-                .collection("teachers")
-                .add(form)
-                .then(res => {
-                    const newTeacher = {
-                        ...form,
-                        id: res.id
-                    }
+            return addToCollection("teachers", form).then(res => {
+                const newTeacher = {
+                    ...form,
+                    id: res.id
+                };
 
-                    this.teachers.unshift(newTeacher)
+                this.teachers.unshift(newTeacher);
 
-                    this.close()                    
-                });
+                this.close();
+            });
+        },
+        submit() {
+            this.isEdit ? this.update() : this.add();
         }
     },
     async asyncData() {
-        return db
-            .collection("teachers")
-            .get()
-            .then(res => {
-                let teachers = res.docs.map(doc => {
-                    return Object.assign({}, doc.data(), {
-                        id: doc.id
-                    });
+        return getCollection("teachers").then(res => {
+            let teachers = res.docs.map(doc => {
+                return Object.assign({}, doc.data(), {
+                    id: doc.id
                 });
-
-                return {
-                    teachers
-                };
             });
+
+            return {
+                teachers
+            };
+        });
     }
 };
 </script>
