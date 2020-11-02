@@ -1,5 +1,3 @@
-import {firebaseInit} from './firebase/' 
-
 export default {
     // Target (https://go.nuxtjs.dev/config-target)
     target: "static",
@@ -38,7 +36,25 @@ export default {
         // https://go.nuxtjs.dev/axios
         "@nuxtjs/axios",
         // https://go.nuxtjs.dev/pwa
-        "@nuxtjs/pwa"
+        "@nuxtjs/pwa",
+        [
+            "@nuxtjs/firebase",
+            {
+                config: {
+                    apiKey: "AIzaSyCmq4Snc3lPmtaFtM7TKOFGMyoml-rnMX8",
+                    authDomain: "septimus-academy.firebaseapp.com",
+                    databaseURL: "https://septimus-academy.firebaseio.com",
+                    projectId: "septimus-academy",
+                    storageBucket: "septimus-academy.appspot.com",
+                    messagingSenderId: "359888623532",
+                    appId: "1:359888623532:web:b9ea6e479ddb3a3c4c8c09",
+                    measurementId: "G-F03YNTEKW6"
+                },
+                services: {
+                    firestore: true
+                }
+            }
+        ]
     ],
 
     // Axios module configuration (https://go.nuxtjs.dev/config-axios)
@@ -49,13 +65,5 @@ export default {
 
     generate: {
         fallback: true
-    },
-
-    hooks: {
-        generate: {
-            done(builder) {
-                firebaseInit.firestore.terminate();
-            }
-        }
     }
 };

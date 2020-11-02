@@ -78,13 +78,13 @@
 </template>
 
 <script>
-import { db } from "@/firebase";
-import {
-    addToCollection,
-    getCollection,
-    updateDocumnet,
-    deleteFromCollection
-} from "@/firebase/methods/firestore";
+// import { db } from "@/firebase";
+// import {
+//     addToCollection,
+//     getCollection,
+//     updateDocumnet,
+//     deleteFromCollection
+// } from "@/firebase/methods/firestore";
 import TeacherCard from "@/components/admin/teachers/TeacherCard";
 
 import AdminModal from "@/components/admin/shared/AdminModal";
@@ -123,20 +123,29 @@ export default {
             this.teacher = selectedTeacher;
         },
         deleteTeacher(id) {
-            return deleteFromCollection("teachers", id).then(() => {
-                this.teachers = this.teachers.filter(teacher => teacher.id != id);
-            });
+            return this.$fireModule
+                .firestore()
+                .collection("teachers")
+                .doc(id)
+                .delete()
+                .then(() => {
+                    this.teachers = this.teachers.filter(
+                        teacher => teacher.id != id
+                    );
+                });
         },
         update() {
             let teacherInfo = { ...this.teacher };
             delete teacherInfo.id;
-            return updateDocumnet(
-                "teachers",
-                this.teacher.id,
-                teacherInfo
-            ).then(res => {
-                this.close();
-            });
+
+            return this.$fireModule
+                .firestore()
+                .collection("teachers")
+                .doc(this.teacher.id)
+                .update(teacherInfo)
+                .then(res => {
+                    this.close();
+                });
         },
         add() {
             const form = {
@@ -146,33 +155,41 @@ export default {
 
             console.log(form);
 
-            return addToCollection("teachers", form).then(res => {
-                const newTeacher = {
-                    ...form,
-                    id: res.id
-                };
+            return this.$fireModule
+                .firestore()
+                .collection("teachers")
+                .add(form)
+                .then(res => {
+                    const newTeacher = {
+                        ...form,
+                        id: res.id
+                    };
 
-                this.teachers.unshift(newTeacher);
+                    this.teachers.unshift(newTeacher);
 
-                this.close();
-            });
+                    this.close();
+                });
         },
         submit() {
             this.isEdit ? this.update() : this.add();
         }
     },
-    async asyncData() {
-        return getCollection("teachers").then(res => {
-            let teachers = res.docs.map(doc => {
-                return Object.assign({}, doc.data(), {
-                    id: doc.id
+    async asyncData({ app }) {
+        return app.$fireModule
+            .firestore()
+            .collection("teachers")
+            .get()
+            .then(res => {
+                let teachers = res.docs.map(doc => {
+                    return Object.assign({}, doc.data(), {
+                        id: doc.id
+                    });
                 });
-            });
 
-            return {
-                teachers
-            };
-        });
+                return {
+                    teachers
+                };
+            });
     }
 };
 </script>
