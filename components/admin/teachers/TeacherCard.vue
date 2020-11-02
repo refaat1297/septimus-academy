@@ -11,7 +11,10 @@
             <div class="text-purple-500 font-semibold">{{ teacher.specialty }}</div>
             <div class="text-gray-800">{{ teacher.email }}</div>
             <div class="text-gray-800">{{ teacher.phone }}</div>
-            <button @click="$emit('edit')" class="transition-all duration-300 ease-in-out text-white rounded bg-pink-500 px-3 py-3 font-sans font-semibold shadow-lg outline-none focus:outline-none hover:bg-pink-800">Edit</button>
+            <div class="control flex">
+                <button @click="$emit('edit')" class="transition-all mt-2 mr-2 duration-300 ease-in-out text-white rounded bg-pink-500 text-sm px-3 py-1 font-sans font-semibold shadow-lg outline-none focus:outline-none hover:bg-pink-800">Edit</button>
+                <button @click="$emit('delete')" class="transition-all mt-2 duration-300 ease-in-out text-white rounded bg-red-500 text-sm px-3 py-1 font-sans font-semibold shadow-lg outline-none focus:outline-none hover:bg-red-800">Delete</button>
+            </div>
         </div>
     </div>
 </template>

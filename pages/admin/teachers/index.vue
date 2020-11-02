@@ -3,10 +3,10 @@
         <h2 class="mb-5 flex items-center justify-between">
             <span class="text-3xl font-extrabold italic">All Teachers</span>
             <button
-                class="transition-all duration-300 ease-in-out text-white rounded bg-pink-500 px-8 py-3 font-sans font-semibold shadow-lg outline-none focus:outline-none hover:bg-pink-800"
+                class="transition-all duration-300 ease-in-out text-white text-sm rounded bg-pink-500 px-5 py-2 font-sans font-semibold shadow-lg outline-none focus:outline-none hover:bg-pink-800"
                 @click="toggleModal = true"
             >
-                Add button
+                New Teacher
             </button>
         </h2>
 
@@ -71,6 +71,7 @@
                 :key="teacher.id"
                 :teacher="teacher"
                 @edit="edit(teacher)"
+                @delete="deleteTeacher(teacher.id)"
             />
         </div>
     </div>
@@ -81,7 +82,8 @@ import { db } from "@/firebase";
 import {
     addToCollection,
     getCollection,
-    updateDocumnet
+    updateDocumnet,
+    deleteFromCollection
 } from "@/firebase/methods/firestore";
 import TeacherCard from "@/components/admin/teachers/TeacherCard";
 
@@ -119,6 +121,11 @@ export default {
             this.isEdit = true;
             this.toggleModal = true;
             this.teacher = selectedTeacher;
+        },
+        deleteTeacher(id) {
+            return deleteFromCollection("teachers", id).then(() => {
+                this.teachers = this.teachers.filter(teacher => teacher.id != id);
+            });
         },
         update() {
             let teacherInfo = { ...this.teacher };
