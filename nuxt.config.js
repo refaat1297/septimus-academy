@@ -1,3 +1,5 @@
+import {firebaseInit} from './firebase/' 
+
 export default {
     // Target (https://go.nuxtjs.dev/config-target)
     target: "static",
@@ -47,5 +49,13 @@ export default {
 
     generate: {
         fallback: true
+    },
+
+    hooks: {
+        generate: {
+            done(builder) {
+                firebaseInit.firestore.terminate();
+            }
+        }
     }
 };
