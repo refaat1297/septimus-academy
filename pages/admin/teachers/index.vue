@@ -148,16 +148,26 @@ export default {
             this.isEdit ? this.update() : this.add();
         }
     },
-    fetch({ $axios, store }) {
-        return $axios.$get("/teachers.json").then(res => {
-            let teachers = res ? Object.entries(res) : [];
-            teachers = teachers.map(teacher => {
-                return Object.assign({}, { id: teacher[0], ...teacher[1] });
-            });
+    asyncData({app, store}) {
+        return app.$axios
+            .$get("/teachers.json", {
+                headers: {
+                    common: {
+                        Accept: "application/json, text/plain, */*"
+                    }
+                }
+            })
+            .then(res => {
+                console.log(res);
+                let teachers = res ? Object.entries(res) : [];
+                teachers = teachers.map(teacher => {
+                    return Object.assign({}, { id: teacher[0], ...teacher[1] });
+                });
 
-            store.commit("updateTeachers", teachers);
-        });
-    }
+                store.commit("updateTeachers", teachers);
+            });
+    },
+    fetchOnServer: false
 };
 </script>
 
