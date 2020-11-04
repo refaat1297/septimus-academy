@@ -169,7 +169,7 @@ export default {
             this.isEdit ? this.update() : this.add();
         }
     },
-    fetch() {
+    mounted () {
         return this.$axios
             .$get("https://septimus-academy.firebaseio.com/teachers.json")
             .then(res => {
