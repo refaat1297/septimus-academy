@@ -1,15 +1,32 @@
 <template>
-    <div class="lds-ring flex justify-center items-center m-auto">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
+    <div
+        class="lds-ring flex justify-center items-center m-auto"
+        style="width: 80px; height: 80px"
+    >
+        <div
+            v-for="(item, i) in 4"
+            :key="i"
+            style="width: 64px;
+    height: 64px;
+    margin: 8px;
+    border: 8px solid #4c51bf;
+    border-color: #4c51bf transparent transparent transparent;"
+        ></div>
     </div>
 </template>
 
 <script>
 export default {
-    name: "AdminLoader"
+    name: "AdminLoader",
+    props: {
+        size: {
+            type: String,
+            default: "xl"
+        }
+    },
+    computed: {
+        
+    }
 };
 </script>
 
@@ -17,8 +34,6 @@ export default {
 .lds-ring {
     display: inline-block;
     position: relative;
-    width: 80px;
-    height: 80px;
 }
 .lds-ring div {
     box-sizing: border-box;
@@ -28,9 +43,9 @@ export default {
     height: 64px;
     margin: 8px;
     border: 8px solid #4c51bf;
+    border-color: #4c51bf transparent transparent transparent;
     border-radius: 50%;
     animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-    border-color: #4c51bf transparent transparent transparent;
 }
 .lds-ring div:nth-child(1) {
     animation-delay: -0.45s;
