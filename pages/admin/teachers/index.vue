@@ -67,7 +67,7 @@
             class="grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-5"
         >
             <TeacherCard
-                v-for="teacher in teachers"
+                v-for="teacher in $store.getters.getTeachers"
                 :key="teacher.id"
                 :teacher="teacher"
                 @edit="edit(teacher)"
@@ -78,13 +78,6 @@
 </template>
 
 <script>
-// import { db } from "@/firebase";
-// import {
-//     addToCollection,
-//     getCollection,
-//     updateDocumnet,
-//     deleteFromCollection
-// } from "@/firebase/methods/firestore";
 import TeacherCard from "@/components/admin/teachers/TeacherCard";
 
 import AdminModal from "@/components/admin/shared/AdminModal";
@@ -99,11 +92,13 @@ export default {
             toggleModal: false,
             isEdit: false,
             teachers: [],
+            deleteLoading: false,
+            selectedTeacher: {},
             teacher: {
-                name: null,
-                email: null,
-                phone: null,
-                specialty: null
+                name: "",
+                email: "",
+                phone: "",
+                specialty: ""
             }
         };
     },
@@ -121,65 +116,47 @@ export default {
         edit(selectedTeacher) {
             this.isEdit = true;
             this.toggleModal = true;
-            this.teacher = selectedTeacher;
+            this.teacher = { ...selectedTeacher };
         },
         deleteTeacher(id) {
-            return this.$axios.$delete(`https://septimus-academy.firebaseio.com/teachers/${id}.json`).then(() => {
-                this.teachers = this.teachers.filter(
-                        teacher => teacher.id != id
-                    );
-            })
+            this.deleteLoading = true;
+            this.$store.dispatch("deleteTeacher", id);
         },
         update() {
+            let payload = { ...this.teacher };
             let teacherInfo = {
-               [this.teacher.id]: {
-                   ...this.teacher
-               }
+                [payload.id]: {
+                    ...payload
+                }
             };
-            delete teacherInfo[this.teacher.id].id;
+            delete teacherInfo[payload.id].id;
 
+            // console.table(teacherInfo)
 
-            return this.$axios
-                .$patch("https://septimus-academy.firebaseio.com/teachers.json", teacherInfo)
-                .then(res => {
-                    this.close()
-                });
+            this.$store.dispatch("editTeacher", teacherInfo).then(() => {
+                this.close();
+            });
         },
         add() {
             const form = {
                 ...this.teacher,
                 image: "teacher-1.jpg"
             };
-
-            return this.$axios
-                .$post(
-                    "https://septimus-academy.firebaseio.com/teachers.json",
-                    form
-                )
-                .then(({ name }) => {
-                    let newTeacher = { id: name, ...form };
-                    console.log(newTeacher);
-                    this.teachers.push(newTeacher);
-                    this.close();
-                });
-
-            console.log(res);
+            this.$store.dispatch("addTeacher", form).then(() => this.close());
         },
         submit() {
             this.isEdit ? this.update() : this.add();
         }
     },
-    mounted () {
-        return this.$axios
-            .$get("https://septimus-academy.firebaseio.com/teachers.json")
-            .then(res => {
-                let teachers = res ? Object.entries(res) : [];
-                teachers = teachers.map(teacher => {
-                    return Object.assign({}, { id: teacher[0], ...teacher[1] });
-                });
-
-                this.teachers = teachers
+    fetch({ $axios, store }) {
+        return $axios.$get("/teachers.json").then(res => {
+            let teachers = res ? Object.entries(res) : [];
+            teachers = teachers.map(teacher => {
+                return Object.assign({}, { id: teacher[0], ...teacher[1] });
             });
+
+            store.commit("updateTeachers", teachers);
+        });
     }
 };
 </script>
