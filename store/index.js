@@ -22,7 +22,7 @@ export default {
         },
         editTeacher({ state, commit }, payload) {
             
-            return this.$axios.$put(`/teachers.json`, payload).then(() => {
+            return this.$axios.$patch(`/teachers.json`, payload).then(() => {
                 
                 let id = Object.keys(payload)[0]
                 const updatedTeacher = {

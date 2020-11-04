@@ -14,7 +14,7 @@
             <template v-slot>
                 <form @submit.prevent="submit()">
                     <div class="mb-4">
-                        <p class="mb-2 font-bold italic capitalize text-lg">name</p>
+                        <p class="mb-2 font-bold italic capitalize text-lg">Name</p>
                         <input
                             type="text"
                             placeholder="name"
