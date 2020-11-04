@@ -148,15 +148,9 @@ export default {
             this.isEdit ? this.update() : this.add();
         }
     },
-    asyncData({app, store}) {
-        return app.$axios
-            .$get("/teachers.json", {
-                headers: {
-                    common: {
-                        Accept: "application/json, text/plain, */*"
-                    }
-                }
-            })
+    mounted () {
+        return this.$axios
+            .$get("/teachers.json")
             .then(res => {
                 console.log(res);
                 let teachers = res ? Object.entries(res) : [];
@@ -164,10 +158,9 @@ export default {
                     return Object.assign({}, { id: teacher[0], ...teacher[1] });
                 });
 
-                store.commit("updateTeachers", teachers);
+                this.$store.commit("updateTeachers", teachers);
             });
     },
-    fetchOnServer: false
 };
 </script>
 
