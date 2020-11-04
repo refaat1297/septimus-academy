@@ -98,7 +98,7 @@ export default {
         return {
             toggleModal: false,
             isEdit: false,
-            // teachers: null,
+            teachers: [],
             teacher: {
                 name: null,
                 email: null,
@@ -169,8 +169,8 @@ export default {
             this.isEdit ? this.update() : this.add();
         }
     },
-    asyncData({ app }) {
-        return app.$axios
+    fetch() {
+        return this.$axios
             .$get("https://septimus-academy.firebaseio.com/teachers.json")
             .then(res => {
                 let teachers = res ? Object.entries(res) : [];
@@ -178,9 +178,7 @@ export default {
                     return Object.assign({}, { id: teacher[0], ...teacher[1] });
                 });
 
-                return {
-                    teachers
-                };
+                this.teachers = teachers
             });
     }
 };
