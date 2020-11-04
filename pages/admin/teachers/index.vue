@@ -98,6 +98,7 @@ export default {
         return {
             toggleModal: false,
             isEdit: false,
+            // teachers: null,
             teacher: {
                 name: null,
                 email: null,
@@ -123,28 +124,25 @@ export default {
             this.teacher = selectedTeacher;
         },
         deleteTeacher(id) {
-            return this.$fireModule
-                .firestore()
-                .collection("teachers")
-                .doc(id)
-                .delete()
-                .then(() => {
-                    this.teachers = this.teachers.filter(
+            return this.$axios.$delete(`https://septimus-academy.firebaseio.com/teachers/${id}.json`).then(() => {
+                this.teachers = this.teachers.filter(
                         teacher => teacher.id != id
                     );
-                });
+            })
         },
         update() {
-            let teacherInfo = { ...this.teacher };
-            delete teacherInfo.id;
+            let teacherInfo = {
+               [this.teacher.id]: {
+                   ...this.teacher
+               }
+            };
+            delete teacherInfo[this.teacher.id].id;
 
-            return this.$fireModule
-                .firestore()
-                .collection("teachers")
-                .doc(this.teacher.id)
-                .update(teacherInfo)
+
+            return this.$axios
+                .$patch("https://septimus-academy.firebaseio.com/teachers.json", teacherInfo)
                 .then(res => {
-                    this.close();
+                    this.close()
                 });
         },
         add() {
@@ -153,37 +151,31 @@ export default {
                 image: "teacher-1.jpg"
             };
 
-            console.log(form);
-
-            return this.$fireModule
-                .firestore()
-                .collection("teachers")
-                .add(form)
-                .then(res => {
-                    const newTeacher = {
-                        ...form,
-                        id: res.id
-                    };
-
-                    this.teachers.unshift(newTeacher);
-
+            return this.$axios
+                .$post(
+                    "https://septimus-academy.firebaseio.com/teachers.json",
+                    form
+                )
+                .then(({ name }) => {
+                    let newTeacher = { id: name, ...form };
+                    console.log(newTeacher);
+                    this.teachers.push(newTeacher);
                     this.close();
                 });
+
+            console.log(res);
         },
         submit() {
             this.isEdit ? this.update() : this.add();
         }
     },
-    async asyncData({ app }) {
-        return app.$fireModule
-            .firestore()
-            .collection("teachers")
-            .get()
+    asyncData({ app }) {
+        return app.$axios
+            .$get("https://septimus-academy.firebaseio.com/teachers.json")
             .then(res => {
-                let teachers = res.docs.map(doc => {
-                    return Object.assign({}, doc.data(), {
-                        id: doc.id
-                    });
+                let teachers = res ? Object.entries(res) : [];
+                teachers = teachers.map(teacher => {
+                    return Object.assign({}, { id: teacher[0], ...teacher[1] });
                 });
 
                 return {
