@@ -10,7 +10,7 @@
                     class="bg-white w-full rounded p-5 shadow-2xl flex flex-col"
                 >
                     <div class="modal-header">
-                        <h3 class="text-2xl font-bold">Hello from modal</h3>
+                        <h3 class="text-2xl font-bold capitalize mb-5">{{ title }}</h3>
                     </div>
                     <div class="modal-body">
                         <slot></slot>
@@ -30,6 +30,10 @@
 export default {
     name: "AdminModal",
     props: {
+        title: {
+            type: String,
+            required: true
+        },
         toggleModal: {
             type: Boolean,
             required: true

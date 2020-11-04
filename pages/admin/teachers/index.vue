@@ -10,51 +10,55 @@
             </button>
         </h2>
 
-        <AdminModal :toggleModal="toggleModal">
+        <AdminModal :toggleModal="toggleModal" :title="modalTitle">
             <template v-slot>
                 <form @submit.prevent="submit()">
-                    <div>
-                        <p>name</p>
+                    <div class="mb-4">
+                        <p class="mb-2 font-bold italic capitalize text-lg">name</p>
                         <input
                             type="text"
                             placeholder="name"
+                            class="w-full black px-2 py-1 border border-indigo-500 rounded outline-none"
                             v-model="teacher.name"
                         />
                     </div>
-                    <div>
-                        <p>email</p>
+                    <div class="mb-4">
+                        <p class="mb-2 font-bold italic capitalize text-lg">email</p>
                         <input
                             type="text"
                             placeholder="email"
+                            class="w-full black px-2 py-1 border border-indigo-500 rounded outline-none"
                             v-model="teacher.email"
                         />
                     </div>
-                    <div>
-                        <p>phone</p>
+                    <div class="mb-4">
+                        <p class="mb-2 font-bold italic capitalize text-lg">phone</p>
                         <input
                             type="text"
                             placeholder="phone"
+                            class="w-full black px-2 py-1 border border-indigo-500 rounded outline-none"
                             v-model="teacher.phone"
                         />
                     </div>
-                    <div>
-                        <p>specialty</p>
+                    <div class="mb-4">
+                        <p class="mb-2 font-bold italic capitalize text-lg">specialty</p>
                         <input
                             type="text"
                             placeholder="specialty"
+                            class="w-full black px-2 py-1 border border-indigo-500 rounded outline-none"
                             v-model="teacher.specialty"
                         />
                     </div>
 
                     <div class="modal-footer flex justify-end items-center">
                         <button
-                            class="rounded bg-red-500 text-white px-6 mt-1 py-2 mr-3"
+                            class="rounded bg-red-500 text-white px-2 text-sm font-semibold mt-1 py-2 mr-3"
                             @click="close()"
                         >
                             Close
                         </button>
                         <button
-                            class="rounded bg-green-500 text-white px-6 mt-1 py-2 "
+                            class="rounded bg-green-500 text-white text-sm font-semibold px-2 mt-1 py-2 "
                         >
                             Submit
                         </button>
@@ -66,26 +70,35 @@
         <div
             class="grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-5"
         >
-            <TeacherCard
+            <template v-if="$store.getters.getTeachers">
+                <TeacherCard
                 v-for="teacher in $store.getters.getTeachers"
                 :key="teacher.id"
                 :teacher="teacher"
                 @edit="edit(teacher)"
                 @delete="deleteTeacher(teacher.id)"
             />
+            </template>
+            <AdminLoader v-else />
         </div>
     </div>
 </template>
 
 <script>
 import TeacherCard from "@/components/admin/teachers/TeacherCard";
-
 import AdminModal from "@/components/admin/shared/AdminModal";
+import AdminLoader from "@/components/admin/shared/AdminLoader";
 
 export default {
     components: {
         TeacherCard,
-        AdminModal
+        AdminModal,
+        AdminLoader
+    },
+    computed: {
+        modalTitle () {
+            return this.isEdit ? "Edit Teacher" : "Add New Teacher"
+        }
     },
     data() {
         return {
